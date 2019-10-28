@@ -1,8 +1,8 @@
 package main
 
 import (
+	"fmt"
 	"os"
-
 	"github.com/01-edu/z01"
 )
 
@@ -10,15 +10,39 @@ func main() {
 	sudoku := os.Args[1:]
 	//sudoku := []string{"8........", "..36.....", ".7..9.2..", ".5...7...", "....457..", "...1...3.", "..1....68", "..85...1.", ".9....4.."}
 	dots := 0
-	for _, line := range sudoku {
-		for _, num := range line {
-			if num == '.' {
-				dots++
-			}
 
+	if CheckInput(&dots, sudoku) {
+		Solve(sudoku, 0, 0, dots, 0)
+	}
+}
+
+func CheckInput(dots *int, sudoku []string) bool {
+	if len(sudoku) != 9 {
+		fmt.Println("Error")
+		return false
+	} else {
+		for row, line := range sudoku {
+			if len(line) != 9 {
+				fmt.Println("Error")
+				return false
+			} else {
+				for column, num := range line {
+					if num == '.' {
+						*dots++
+					} else if num < '1' && num > '9' {
+						fmt.Println("Error")
+						return false
+					} else if ValidNumber(row, column, sudoku) == false {
+						fmt.Println("Error")
+						return false
+					}
+
+				}
+
+			}
 		}
 	}
-	Solve(sudoku, 0, 0, dots, 0)
+	return true
 }
 
 func Solve(lines []string, row int, column int, dots int, current int) {
@@ -94,3 +118,4 @@ func ValidNumber(row int, column int, lines []string) bool {
 	return false
 
 }
+
